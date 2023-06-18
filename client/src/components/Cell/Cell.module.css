@@ -1,0 +1,124 @@
+.cell {
+  display: flex;
+  position: relative;
+
+  width: var(--cell-width);
+  height: var(--cell-height);
+
+  cursor: pointer;
+  border-radius: 3px;
+  margin: var(--cell-margin);
+
+  transition: all 100ms linear;
+}
+
+.cell:hover {
+  transform: scale(1.1);
+}
+
+.cell:has(div):hover {
+  transform: none;
+}
+
+.cellPrimary {
+  background-color: var(--grid-cell-primary-color);
+}
+
+.cellSecondary {
+  background-color: var(--grid-cell-secondary-color);
+}
+
+.hit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 100;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  height: 40%;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+}
+
+.hitMissPrimary {
+  background-color: var(--grid-hit-missed-primary-color);
+}
+
+.hitMissSecondary {
+  background-color: var(--grid-hit-missed-secondary-color);
+}
+
+.shipPart {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  background-color: var(--secondary-color);
+}
+
+.shipBodyVertical {
+  height: calc(100% + var(--cell-margin) * 2);
+  margin-top: calc(var(--cell-margin) * -1);
+  margin-bottom: calc(var(--cell-margin) * -1);
+}
+
+.shipBodyHorizontal {
+  width: calc(100% + var(--cell-margin) * 2);
+  margin-left: calc(var(--cell-margin) * -1);
+  margin-right: calc(var(--cell-margin) * -1);
+}
+
+.shipHeadUp {
+  border-radius: var(--ship-head-border-raius) var(--ship-head-border-raius) 0 0;
+  height: calc(100% + var(--cell-margin));
+  margin-bottom: calc(var(--cell-margin) * -1);
+}
+
+.shipHeadDown {
+  border-radius: 0 0 var(--ship-head-border-raius) var(--ship-head-border-raius);
+  height: calc(100% + var(--cell-margin));
+  margin-top: calc(var(--cell-margin) * -1);
+}
+
+.shipHeadRight {
+  border-radius: 0 var(--ship-head-border-raius) var(--ship-head-border-raius) 0;
+  width: calc(100% + var(--cell-margin));
+  margin-left: calc(var(--cell-margin) * -1);
+}
+
+.shipHeadLeft {
+  border-radius: var(--ship-head-border-raius) 0 0 var(--ship-head-border-raius);
+  width: calc(100% + var(--cell-margin));
+  margin-right: calc(var(--cell-margin) * -1);
+}
+
+.shipTailUp {
+  border-radius: 0 0 var(--ship-tail-border-raius) var(--ship-tail-border-raius);
+  height: calc(100% + var(--cell-margin));
+  margin-top: calc(var(--cell-margin) * -1);
+}
+
+.shipTailDown {
+  border-radius: var(--ship-tail-border-raius) var(--ship-tail-border-raius) 0 0;
+  height: calc(100% + var(--cell-margin));
+  margin-bottom: calc(var(--cell-margin) * -1);
+}
+
+.shipTailRight {
+  border-radius: var(--ship-tail-border-raius) 0 0 var(--ship-tail-border-raius);
+  width: calc(100% + var(--cell-margin));
+  margin-right: calc(var(--cell-margin) * -1);
+}
+
+.shipTailLeft {
+  border-radius: 0 var(--ship-tail-border-raius) var(--ship-tail-border-raius) 0;
+  width: calc(100% + var(--cell-margin));
+  margin-left: calc(var(--cell-margin) * -1);
+}
+
+.shipOneCell {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--ship-tail-border-raius);
+}

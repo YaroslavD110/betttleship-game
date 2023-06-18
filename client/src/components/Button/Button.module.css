@@ -1,0 +1,25 @@
+.btn {
+  cursor: pointer;
+  margin-top: 50px;
+  background-color: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  border-radius: 5px;
+  padding: 10px 25px;
+  transition: all ease-in-out 200ms;
+}
+
+.btn:hover {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.btnSecondary {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.btnSecondary:hover {
+  background-color: transparent;
+  color: var(--primary-color);
+}

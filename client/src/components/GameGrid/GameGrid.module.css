@@ -1,0 +1,57 @@
+.grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+}
+
+.headerCell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-weight: 700;
+  color: var(--text-accent-color);
+
+  width: var(--cell-width);
+  height: var(--cell-height);
+  margin: var(--cell-margin);
+}
+
+.spacerCell {
+  width: var(--cell-width);
+  height: var(--cell-height);
+  margin: var(--cell-margin);
+}
+
+.shipDetailsWrap {
+  position: relative;
+  display: flex;
+  margin-top: 20px;
+  padding-left: 40px;
+  max-width: 280px;
+}
+
+.shipDetailsTitle {
+  position: absolute;
+  top: 28px;
+  left: -15px;
+  margin: 0;
+  transform: rotate(-90deg);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-accent-color);
+  text-transform: uppercase;
+}
+
+.shipDetailsContent {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.shipDetailsContent span {
+  margin: 2px 5px;
+  color: var(--text-color);
+}

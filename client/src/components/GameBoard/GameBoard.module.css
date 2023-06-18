@@ -1,0 +1,31 @@
+.wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.boardSide {
+  padding: 0 50px;
+}
+
+.boardSide:nth-child(2) {
+  border-left: 1px solid var(--secondary-color);
+}
+
+.boardHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  text-transform: uppercase;
+  background-color: var(--primary-color);
+  margin-bottom: 15px;
+  padding: 5px 0;
+}
+
+.boardSide:nth-child(2) .boardHeader {
+  background-color: var(--secondary-color);
+}

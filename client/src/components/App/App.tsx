@@ -6,7 +6,7 @@ import { WSConnectMessage } from '@ws/types';
 import { GameSetup } from '../GameSetup/GameSetup';
 import { WaitingScreen } from '../WaitingScreen/WaitingScreen';
 import { HomeScreen } from '../HomeScreen/HomeScreen';
-import { Game, WSMessage, WSPayload } from '../../shared/types';
+import { Game, ShipData, WSMessage, WSPayload } from '../../shared/types';
 import { GameState, WSMessageType } from '../../shared/constants';
 import { GameBoard } from '../GameBoard/GameBoard';
 import { useListenType } from '../../shared/hooks/use-listen-type';
@@ -17,6 +17,7 @@ function App() {
   const [gameId, setGameId] = useState<string | null>(null);
   const [clientId, setClientId] = useState<string | null>(null);
   const [showWaitingScreen, setWaitingScreenStatus] = useState(false);
+  const [gameShips, setGameShips] = useState<ShipData[]>([]);
   const [gameState, setGameState] = useState<GameState>(GameState.PENDING);
   const [wsState, setWsState] = useState<number>(WebSocket.CLOSED);
   const [lastMessage, setLastMessage] = useState<WSMessage | null>(null);
@@ -88,13 +89,22 @@ function App() {
     clientId
   };
 
+  if (showWaitingScreen) {
+    return (
+      <div className="App">
+        <WaitingScreen game={game} />
+        <ToastContainer />
+      </div>
+    );
+  }
+
   return (
     <div className="App">
       {showWaitingScreen && <WaitingScreen game={game} />}
 
       {gameState === GameState.PENDING && <HomeScreen game={game} />}
-      {gameState === GameState.SETUP && <GameSetup />}
-      {gameState === GameState.STARTED && <GameBoard />}
+      {gameState === GameState.SETUP && <GameSetup game={game} setGameShips={setGameShips} />}
+      {gameState === GameState.STARTED && <GameBoard game={game} gameShips={gameShips} />}
 
       <ToastContainer />
     </div>

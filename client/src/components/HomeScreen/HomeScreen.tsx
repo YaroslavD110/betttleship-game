@@ -36,6 +36,7 @@ export const HomeScreen = (props: Props) => {
       toast.error('Invalid game code!');
     }
 
+    game.setGameId(inputValue);
     game.sendMessage({
       type: WSMessageType.GAME_CONNECT,
       clientId: game.clientId,
@@ -54,6 +55,7 @@ export const HomeScreen = (props: Props) => {
   useListenType<WSGameConnectResponeMessage>(WSMessageType.GAME_CONNECT, (message) => {
     if (message.error) {
       toast.error(message.error);
+      game.setGameId(null);
       return;
     }
 

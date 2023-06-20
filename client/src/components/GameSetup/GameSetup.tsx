@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
+import { WSGameSetupRequestMessage } from '@ws/types';
 
 import { CellData, Game, ShipCellData, ShipData } from '../../shared/types';
 import { getGridData, getShipDataForCell } from '../../shared/grid-utils';
 import { GameGrid } from '../GameGrid/GameGrid';
-import { Direction, GameState, GridMode, Position, WSMessageType } from '../../shared/constants';
+import { Direction, GridMode, Position, WSMessageType } from '../../shared/constants';
+import { Button } from '../Button/Button';
 
 import styles from './GameSetup.module.css';
-import { Button } from '../Button/Button';
 
 interface Props {
   game: Game;
+  setGameShips: (ships: ShipData[]) => void;
 }
 
 export const GameSetup = (props: Props) => {
-  const { game } = props;
+  const { game, setGameShips } = props;
 
   const [isGameReady, setGameStatus] = useState<boolean>(false);
   const [cells] = useState<CellData[][]>(getGridData);
@@ -219,11 +223,21 @@ export const GameSetup = (props: Props) => {
   };
 
   const handleReadyBtnClick = () => {
-    game.toggleWaitingScreen(true);
-    game.sendMessage({
+    if (!game.id || !game.clientId) {
+      toast.error('Failed to send game data:( Please refresh page!');
+      return;
+    }
+
+    const message: WSGameSetupRequestMessage = {
       type: WSMessageType.GAME_SETUP,
-      data: ships.map((ship) => ship.map(shipCell => shipCell.code))
-    });
+      gameId: game.id,
+      clientId: game.clientId,
+      ships: ships.map((ship) => ship.map(shipCell => shipCell.code))
+    };
+
+    game.toggleWaitingScreen(true);
+    game.sendMessage(message);
+    setGameShips(ships);
   };
 
   useEffect(() => {

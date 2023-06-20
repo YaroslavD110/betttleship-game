@@ -26,7 +26,7 @@ export interface Game {
   lastMessage: WSMessage | null;
   toggleWaitingScreen: (state: boolean) => void;
   sendMessage: (payload: WSPayload) => void;
-  setGameId: (gameId: string) => void;
+  setGameId: (gameId: string | null) => void;
   changeGameState: (state: GameState) => void;
 }
 

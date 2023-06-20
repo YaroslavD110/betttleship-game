@@ -22,6 +22,13 @@ export interface WSGameConnectRequestMessage extends WSBaseMessage {
   gameId: string;
 }
 
+export interface WSGameSetupRequestMessage extends WSBaseMessage {
+  type: WSMessageType.GAME_SETUP;
+  clientId: string;
+  gameId: string;
+  ships: string[][];
+}
+
 // WS Response mesages types
 export interface WSConnectMessage extends WSBaseMessage {
   type: WSMessageType.WS_CONNECT;
@@ -32,4 +39,9 @@ export interface WSGameConnectResponeMessage extends WSBaseMessage {
   type: WSMessageType.GAME_CONNECT;
   gameId: string;
   participantIds: string[];
+}
+
+export interface WSGameSetupResponseMessage extends WSBaseMessage {
+  type: WSMessageType.GAME_SETUP;
+  readyParticipantsIds: string[]
 }

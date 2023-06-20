@@ -1,10 +1,20 @@
 import { randomBytes } from 'node:crypto';
+
 import { Tuple } from '../ws/types';
 
 export interface GameData {
   id: string;
-  participantsIds: string[];
+  playersData: Record<string, PlayerData>;
 }
+
+interface PlayerData {
+  id: string;
+  ships: string[][];
+  destroyedShips: string[][];
+  hits: string[];
+}
+
+type UpdatePlayerDataArg = Pick<PlayerData, 'id'> & Partial<Omit<PlayerData, 'id'>>;
 
 export interface GameActionError {
   error?: string;
@@ -28,13 +38,17 @@ export class GameManager {
   public createGame(gameId: string, gameParticipantsIds: string[]): void {
     this.games.set(gameId, {
       id: gameId,
-      participantsIds: gameParticipantsIds
+      playersData: gameParticipantsIds.reduce<Record<string, PlayerData>>((data, participantId) => {
+        data[participantId] = this.getDefaultPlayerData(participantId)
+
+        return data;
+      }, {})
     });
   }
 
   public getParticipantGame(participantId: string): GameData | null {
     for (const game of this.games.values()) {
-      if (game.participantsIds.includes(participantId)) {
+      if (game.playersData[participantId]) {
         return game;
       }
     }
@@ -48,16 +62,16 @@ export class GameManager {
       return [null, { error: 'Game not found!' }];
     }
 
-    if (game.participantsIds.length >= this.MAX_PARTICIPANTS_IN_GAME) {
+    if (Object.values(game.playersData).length >= this.MAX_PARTICIPANTS_IN_GAME) {
       return [null, { error: 'Game has been already full' }];
     }
 
     const newGameData: GameData = {
       ...game,
-      participantsIds: [
-        ...game.participantsIds,
-        participantId
-      ]
+      playersData: {
+        ...game.playersData,
+        [participantId]: this.getDefaultPlayerData(participantId)
+      }
     }
 
     this.games.set(gameId, newGameData);
@@ -65,20 +79,48 @@ export class GameManager {
     return [newGameData, null];
   }
 
-  public handleParticipantLeft(participantId: string): void {
+  public handleParticipantLeave(participantId: string): void {
     const participantGame = this.getParticipantGame(participantId);
 
     if (!participantGame) {
+      console.error(`Not found game for ${participantId} participant to handle game leave!`);
       return;
     }
 
-    if (participantGame.participantsIds.length === 1) {
-      this.games.delete(participantGame.id);
-    } else {
-      this.games.set(
-        participantGame.id,
-        { ...participantGame, participantsIds: participantGame.participantsIds.filter(id => id !== participantId) }
-      );
+    this.games.delete(participantGame.id);
+  }
+
+  public updatePlayerData(gameId: string, data: UpdatePlayerDataArg): Tuple<PlayerData[], GameActionError> {
+    const game = this.games.get(gameId);
+    if (!game) {
+      return [null, { error: 'Game not found!' }];
     }
+
+    if (Object.values(game.playersData).length < this.MAX_PARTICIPANTS_IN_GAME) {
+      return [null, { error: 'Game not ready!' }];
+    }
+
+    if (data.ships) {
+      game.playersData[data.id].ships = data.ships;
+    }
+
+    if (data.hits) {
+      game.playersData[data.id].hits = data.hits;
+      
+      // TODO: Calc damage
+    }
+
+    this.games.set(gameId, game);
+
+    return [Object.values(game.playersData), null];
+  }
+
+  private getDefaultPlayerData(playerId: string): PlayerData {
+    return {
+      id: playerId,
+      ships: [],
+      destroyedShips: [],
+      hits: []
+    };
   }
 }

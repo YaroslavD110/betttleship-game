@@ -1,7 +1,7 @@
 import React from 'react';
 import { toast } from 'react-toastify';
 
-import { WSGameConnectResponeMessage } from '@ws/types';
+import { WSGameConnectResponeMessage, WSGameSetupResponseMessage } from '@ws/types';
 
 import styles from './WaitingScreen.module.css';
 import { Game } from '../../shared/types';
@@ -18,6 +18,8 @@ export const WaitingScreen = (props: Props) => {
   const getStatusMessage = () => {
     if (game.state === GameState.CREATED && game.id) {
       return `Ask you opponent enter this code: ${game.id}`;
+    } else if (game.state === GameState.SETUP) {
+      return <><strong>Almost there!</strong><br /> We are waiting for your opponent to configure his board.</>;
     }
   };
 
@@ -29,6 +31,18 @@ export const WaitingScreen = (props: Props) => {
 
     if (game.state === GameState.CREATED) {
       game.changeGameState(GameState.SETUP);
+      game.toggleWaitingScreen(false);
+    }
+  }, game.lastMessage);
+
+  useListenType<WSGameSetupResponseMessage>(WSMessageType.GAME_SETUP, (message) => {
+    if (message.error) {
+      toast.error(message.error);
+      return;
+    }
+
+    if (message.readyParticipantsIds.length === 2) {
+      game.changeGameState(GameState.STARTED);
       game.toggleWaitingScreen(false);
     }
   }, game.lastMessage);

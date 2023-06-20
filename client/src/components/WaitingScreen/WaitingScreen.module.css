@@ -10,6 +10,7 @@
 .statusText {
   font-weight: 300;
   color: var(--text-color);
+  text-align: center;
 }
 
 .container {

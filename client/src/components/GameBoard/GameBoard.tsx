@@ -3,14 +3,20 @@ import React, { useState } from 'react';
 import styles from './GameBoard.module.css';
 
 import { GameGrid } from '../GameGrid/GameGrid';
-import { CellData, ShipData } from '../../shared/types';
+import { CellData, Game, ShipData } from '../../shared/types';
 import { getGridData } from '../../shared/grid-utils';
 import { GridMode } from '../../shared/constants';
 
-export const GameBoard = () => {
+interface Props {
+  game: Game;
+  gameShips: ShipData[];
+}
+
+export const GameBoard = (props: Props) => {
+  const { game, gameShips } = props;
+
   const [cells] = useState<CellData[][]>(getGridData);
   const [hitMap, setHitMap] = useState<Record<string, CellData>>({});
-  const [ships] = useState<ShipData[]>([]);
 
   return (
     <div className={styles.wrap}>
@@ -20,7 +26,7 @@ export const GameBoard = () => {
           mode={GridMode.OWN}
           cells={cells}
           hitMap={hitMap}
-          ships={ships}
+          ships={gameShips}
         />
       </div>
       <div className={styles.boardSide}>
@@ -29,7 +35,7 @@ export const GameBoard = () => {
           mode={GridMode.ENEMY}
           cells={cells}
           hitMap={hitMap}
-          ships={ships}
+          ships={gameShips}
         />
       </div>
     </div>
